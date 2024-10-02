@@ -1,0 +1,180 @@
+openapi: 3.0.0
+info:
+  title: ぶっ飛びダーツの旅API(仮)
+  description: とりあえず書いてみました
+  version: "1.0.0"
+servers:
+  - url: N/A
+paths:
+  /destination:
+    post:
+      summary: 行き先を指定し、サーバーに登録する。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                longtitude:
+                  type: string
+                latitude:
+                  type: string
+                url:
+                  type: string
+                id:
+                  type: string
+      responses:
+        "201":
+          description: 目的地が正常にサーバーに登録されました。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  success:
+                    type: boolean
+        "400":
+          description: 不正なリクエスト
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  success:
+                    type: boolean
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  success:
+                    type: boolean
+
+    get:
+      summary: 行き先を取得する。
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: 行き先を正常に取得しました。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  longtitude:
+                    type: string
+                  latitude:
+                    type: string
+                  url:
+                    type: string
+                  id:
+                    type: string
+        "400":
+          description: 不正なリクエスト
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  success:
+                    type: boolean
+        "500":
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                  success:
+                    type: boolean
+
+  /getGuidance:
+    get:
+      summary: 道のりを取得する。
+      parameters:
+        - in: query
+          name: destinationLongtitude
+          required: true
+          schema:
+            type: string
+          description: 目的地の経度
+        - in: query
+          name: destinationLatitude
+          required: true
+          schema:
+            type: string
+          description: 目的地の緯度
+        - in: query
+          name: currentLongtitude
+          required: true
+          schema:
+            type: string
+          description: 現在地の経度
+        - in: query
+          name: currentLatitude
+          required: true
+          schema:
+            type: string
+          description: 現在地の緯度
+      responses:
+        '200':
+          description: 道のりを正常に取得しました。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  route:
+                    type: string
+        '400':
+          description: 不正なリクエスト
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 認証に失敗しました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
